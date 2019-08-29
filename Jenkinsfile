@@ -1,32 +1,33 @@
 pipeline {
-    agent any
+  
+  agent { label 'linux' }
+   
+  tools {
 
-    stages {
-        stage ('Compile Stage') {
-
-            steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn clean compile'
+     maven 'M3'
+      }  
+  stages {
+         
+      stage ('clone the repo') {
+           steps {
+                  git 'https://github.com/bhalla008/jenkins-example.git'
                 }
-            }
-        }
-
-        stage ('Testing Stage') {
-
-            steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn test'
+         }
+      stage ('Build') {
+           steps {
+                  sh 'mvn clean compile'
                 }
-            }
-        }
+         }
+      stage ('unit test') {
+           steps {
+                  sh 'mvn test'
+                } 
+         }
+      stage ('package') {
+           steps {
+                  sh 'mvn package'
+                }  
+         }
 
-
-        stage ('Deployment Stage') {
-            steps {
-                withMaven(maven : 'maven_3_5_0') {
-                    sh 'mvn deploy'
-                }
-            }
-        }
-    }
-}
+      }
+}  
